@@ -1,2 +1,2 @@
 # Django_Web
-This is a collection for practicing the Django framework.
+This is a project designed for practicing the Django framework.
