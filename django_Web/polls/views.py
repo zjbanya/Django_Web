@@ -6,6 +6,8 @@ from django.template import loader
 from django.http import Http404
 from django.urls import reverse
 from django.views import generic
+from django.utils import timezone
+
 
 ################## python 语法
 # 关键字参数：实参必须显示指定形参名，形式 -- 形参名 = 
@@ -17,14 +19,22 @@ class IndexView(generic.ListView):
     context_object_name = "latest_question_list"
 
     def get_queryset(self):
-        """Return the last five published questions."""
-        return Question.objects.order_by("-pub_date")[:5]
+        """
+        返回最近发布的五个问题(不包括设置为在未来出版)。
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[
+            :5
+        ]
 
 
 class DetailView(generic.DetailView):
     model = Question
     template_name = "polls/detail.html"
-
+    def get_queryset(self):
+        """
+        不包括那些尚未发布的问题。
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now())
 
 class ResultsView(generic.DetailView):
     model = Question
