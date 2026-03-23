@@ -1,0 +1,28 @@
+"""
+URL configuration for mysite project.
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/6.0/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+from django.contrib import admin
+from django.urls import path, include
+from polls import views
+
+urlpatterns = [
+    # 当用户访问 /polls/ 开头的 URL 时，会去 polls 应用的 urls.py 里找对应的规则
+    # 当用户访问 /admin/ 时，Django 会展示 管理后台 页面
+    path('admin/', admin.site.urls),
+    path("", views.index_root, name = "index_root"),
+    path("polls/", include("polls.urls")), # include("polls.urls") 就是把 polls app 的 URL 配置 嵌套进来
+]
+
