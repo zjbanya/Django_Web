@@ -1,4 +1,7 @@
 <!-- Django模版语法 和 python 很像 条件后面试变量名。 -->
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'polls/style.css' %}">
 
 {% if latest_question_list %}
 <ul>
