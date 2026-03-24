@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from polls import views
+from apps.polls import views
 import debug_toolbar
 from django.conf import settings
 
@@ -24,7 +24,7 @@ urlpatterns = [
     # 当用户访问 /polls/ 开头的 URL 时，会去 polls 应用的 urls.py 里找对应的规则
     # 当用户访问 /admin/ 时，Django 会展示 管理后台 页面
     path('admin/', admin.site.urls),
-    path("polls/", include("polls.urls")), # include("polls.urls") 就是把 polls app 的 URL 配置 嵌套进来
+    path("polls/", include("apps.polls.urls")), # include("polls.urls") 就是把 polls app 的 URL 配置 嵌套进来
 ]
 
 # 只在 DEBUG 模式下启用
