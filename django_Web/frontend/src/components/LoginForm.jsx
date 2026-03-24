@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { loginUser } from '../services/auth'
+import userApi from '../api/user'
 
 /**
  * Reusable login form component.
@@ -22,7 +22,7 @@ function LoginForm() {
     return true
   }
 
-  // Handles login button click and calls the backend API.
+  // Handles login button click and calls the centralized axios API module.
   const handleSubmit = async (event) => {
     event.preventDefault()
     setError('')
@@ -32,10 +32,16 @@ function LoginForm() {
 
     try {
       setLoading(true)
-      const result = await loginUser({ username, password })
-      setSuccess(result.message || 'Login successful.')
+      const token = await userApi.login({ username, password })
+      if (token) {
+        setSuccess('Login successful.')
+      } else {
+        setSuccess('Login request succeeded.')
+      }
     } catch (err) {
-      setError(err.message || 'Unable to login right now.')
+      const backendMessage =
+        err?.response?.data?.message || err?.response?.data?.detail || err?.message
+      setError(backendMessage || 'Unable to login right now.')
     } finally {
       setLoading(false)
     }
