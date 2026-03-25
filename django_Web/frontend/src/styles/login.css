@@ -46,10 +46,11 @@
 }
 
 /* Keep all login controls visually centered inside the fixed-size box. */
+/* 这是所有的登录控件的宽 上线！-- 修改这里! */
 .login-content {
   height: 100%;
   width: 100%;
-  max-width: 340px;
+  max-width: 400px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -57,19 +58,134 @@
   gap: 14px;
 }
 
-.login-title {
-  margin: 0;
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #0f172a;
-  text-align: center;
+.login-prompt-wrap {
+  min-height: 76px;
+  width: auto;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  /* 水平居中 */
+  align-items: flex-start;
+  /* 顶部对齐 */
 }
 
-.login-subtitle {
-  margin: 0 0 16px;
-  font-size: 0.95rem;
-  color: #64748b;
+/* Centered prompt; spacing between lines; second line slightly stepped like your sketch */
+.login-prompt-lines {
+  display: inline-block;
+  /*  取消父容器关联 */
+  max-width: none;
+  width: auto;
+  /* max-width: 100%; */
+  position: relative;
+  top: -40px;
+  margin: 0 0 6px;
+  padding: 0 0.5rem;
   text-align: center;
+  font-size: 1.74rem;
+  font-weight: 600;
+  color: #475569;
+  line-height: 1.55;
+}
+
+/* One-shot typing per line (no infinite loop). Component removes this block after animation. */
+.login-line {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: center;
+  width: 0;
+  max-width: 100%;
+  font-family: monospace;
+}
+
+.login-line-1 {
+  display: block;
+  overflow: hidden;
+
+  white-space: nowrap;
+  font-family: monospace;
+  text-align: center;
+  width: 0ch;
+  animation: typeLine1 1.7s steps(28, end) forwards;
+}
+
+.login-line-2 {
+  margin-top: 0.45rem;
+  display: block;
+  width: 100%;
+}
+
+.login-line-2-text {
+  display: inline-block;
+  /* 缩进 */
+  /* padding-left: 1.0rem;  */
+  font-family: monospace;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0ch;
+  animation: typeLine2 1.8s steps(22, end) forwards;
+  /* = 第一行动画时间 */
+  animation-delay: 1.7s;
+}
+
+@keyframes typeLine1 {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes typeLine2 {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+.auth-toggle {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  margin-bottom: 2px;
+}
+
+.auth-toggle-btn {
+  border: none;
+  background: transparent;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  padding: 0;
+}
+
+.auth-toggle-btn-active {
+  color: #4f46e5;
+}
+
+.auth-toggle-sep {
+  margin: 0 8px;
+  color: #94a3b8;
+}
+
+.form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.form-content-fade {
+  opacity: 0;
+  transform: translateY(4px);
 }
 
 .login-label {
@@ -81,6 +197,8 @@
 
 .login-input {
   height: 44px;
+  width: 100%;
+  box-sizing: border-box;
   border: 1px solid #cbd5e1;
   border-radius: 10px;
   padding: 0 12px;
@@ -88,6 +206,39 @@
   color: #0f172a;
   background: #ffffff;
   transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Password row matches other inputs: full width field + fixed-size toggle aligned to 44px row */
+.password-wrap {
+  position: relative;
+  width: 100%;
+  display: block;
+}
+
+.login-input-password {
+  padding-right: 56px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 32px;
+  min-width: 44px;
+  padding: 0 8px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(241, 245, 249, 0.95);
+  color: #334155;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  line-height: 1;
 }
 
 .login-input:focus {
@@ -98,7 +249,9 @@
 
 .login-button {
   margin-top: 8px;
-  height: 46px;
+  height: 44px;
+  width: 100%;
+  box-sizing: border-box;
   border: none;
   border-radius: 12px;
   font-size: 1rem;
