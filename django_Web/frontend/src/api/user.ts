@@ -17,6 +17,18 @@ export interface RegisterParams {
   email: string
 }
 
+export interface LoginResponse {
+  access: string
+  refresh: string
+  username: string
+}
+
+export interface RegisterResponse {
+  message: string
+  username: string
+  email: string
+}
+
 /**
  * Get user list.
  * GET /api/users/
@@ -33,9 +45,9 @@ export async function getUserList(): Promise<any> {
  * Body: { username, password }
  * Returns token from response.
  */
-export async function login(params: LoginParams): Promise<any> {
+export async function login(params: LoginParams): Promise<LoginResponse> {
   const response = await axios.post('/api/login/', params)
-  return response.data?.token
+  return response.data
 }
 
 /**
@@ -43,9 +55,9 @@ export async function login(params: LoginParams): Promise<any> {
  * POST /api/register/
  * Body: { username, password, email }
  */
-export async function register(params: RegisterParams): Promise<any> {
+export async function register(params: RegisterParams): Promise<RegisterResponse> {
   const response = await axios.post('/api/register/', params)
-  return response.data
+  return response.data as RegisterResponse
 }
 
 /**

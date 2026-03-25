@@ -10,7 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
+
+# 提供一个引用自定义模型的值来覆盖 默认的用户模型
+AUTH_USER_MODEL = "login.User"
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -35,8 +40,16 @@ INTERNAL_IPS = [
 # Application definition
 
 INSTALLED_APPS = [
-    "debug_toolbar", # Django Debug Toolbar
     "apps.polls.apps.PollsConfig",
+    "apps.login.apps.LoginConfig",
+#############################################################
+#   第三方 app 
+    'simpleui',
+    "debug_toolbar", # Django Debug Toolbar
+    "rest_framework",
+    "rest_framework_simplejwt",
+    "corsheaders",
+#############################################################
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,8 +59,11 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware', # 中间件 
+    # 中间件
+    "corsheaders.middleware.CorsMiddleware",
+    'debug_toolbar.middleware.DebugToolbarMiddleware',  
     'django.middleware.security.SecurityMiddleware',
+    ############
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -126,3 +142,32 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# --- Django REST Framework + JWT ---
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.AllowAny",
+    ),
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+#    以 Bearer 开头的 token 才会被 DRF Simple JWT 识别。
+    "AUTH_HEADER_TYPES": ("Bearer",), 
+#    不轮换 Refresh Token
+#    不使用黑名单
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+}
+
+# Vite dev server (adjust port if needed)
+# 允许前端域名，以后部署，记得加上生产域名。
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5173",
+    "http://localhost:5173",
+]
+CORS_ALLOW_CREDENTIALS = True
