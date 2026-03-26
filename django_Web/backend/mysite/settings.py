@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "corsheaders",
+    'rest_framework_simplejwt.token_blacklist',
 #############################################################
     'django.contrib.admin',
     'django.contrib.auth',
@@ -159,9 +160,9 @@ SIMPLE_JWT = {
 #    以 Bearer 开头的 token 才会被 DRF Simple JWT 识别。
     "AUTH_HEADER_TYPES": ("Bearer",), 
 #    不轮换 Refresh Token
-#    不使用黑名单
-    "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": False,
+#    黑名单：
+    # "ROTATE_REFRESH_TOKENS": False,
+    # "BLACKLIST_AFTER_ROTATION": False,
 }
 
 # Vite dev server (adjust port if needed)

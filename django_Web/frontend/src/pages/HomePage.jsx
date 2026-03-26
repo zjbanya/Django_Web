@@ -1,21 +1,17 @@
+import DesktopShell from '../components/desktop/DesktopShell'
+import { DesktopProvider } from '../state/DesktopContext'
+
 /**
- * Blog homepage placeholder — verifies login redirect and protected route.
+ * 桌面系统风格博客首页：
+ * - 壁纸全屏背景：中间区域不遮挡
+ * - 四个工具栏默认收起，仅露边界；悬停后滑出
+ * - 角落窗口展示博客列表/详情入口（原型）
  */
 function HomePage() {
   return (
-    <main
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontFamily: 'Inter, system-ui, sans-serif',
-        fontSize: '1.5rem',
-        color: '#0f172a',
-      }}
-    >
-      This is the homepage
-    </main>
+    <DesktopProvider>
+      <DesktopShell />
+    </DesktopProvider>
   )
 }
 

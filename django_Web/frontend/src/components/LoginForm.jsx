@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 
 import userApi from '../api/user'
 import { setAuthTokens } from '../utils/auth'
-
 /**
  * Reusable login form component.
  * Handles input state, simple validation, API call, and feedback UI.

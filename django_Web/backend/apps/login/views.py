@@ -34,8 +34,22 @@ class RegisterView(APIView):
             },
             status=status.HTTP_201_CREATED,
         )
+    
+# 退出视图
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()  # 加入黑名单
+            return Response({"message": "Successfully logged out."}, status=200)
+        except Exception as e:
+            return Response({"error": str(e)}, status=400)
 
 
+# 登录视图
 class LoginView(APIView):
     permission_classes = [AllowAny]
 
