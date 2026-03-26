@@ -12,6 +12,8 @@ type Props = {
   openSize: { height?: number; width?: number }
   // 鼠标热区厚度（决定触发灵敏度）
   hitThickness?: number
+  // 鼠标移出后延迟隐藏（ms）
+  closeDelayMs?: number
   children: ReactNode
 }
 
@@ -28,6 +30,7 @@ export default function HoverRevealDock({
   toolbarKey,
   openSize,
   hitThickness = 14,
+  closeDelayMs = 2000,
   children,
 }: Props) {
   const {
@@ -38,12 +41,23 @@ export default function HoverRevealDock({
     setIsRightOpen,
     isBottomOpen,
     setIsBottomOpen,
+    isTopPinned,
+    setIsTopPinned,
+    isRightPinned,
+    setIsRightPinned,
+    isBottomPinned,
+    setIsBottomPinned,
   } = useDesktop()
 
   const open = side === 'top' ? isTopOpen : side === 'right' ? isRightOpen : isBottomOpen
   const setOpen = side === 'top' ? setIsTopOpen : side === 'right' ? setIsRightOpen : setIsBottomOpen
+  const pinned =
+    side === 'top' ? isTopPinned : side === 'right' ? isRightPinned : isBottomPinned
+  const setPinned =
+    side === 'top' ? setIsTopPinned : side === 'right' ? setIsRightPinned : setIsBottomPinned
 
   const hoverTimer = useRef<number | null>(null)
+  const lastClickAt = useRef<number>(0)
 
   const theme = useMemo(() => {
     const hue = Math.max(0, Math.min(360, accentHue))
@@ -61,7 +75,31 @@ export default function HoverRevealDock({
     }
   }, [accentHue, toolbarKey])
 
-  const transition = 'transition-transform duration-300 ease-in-out'
+  // 更自然的“呼吸感”：更长时长 + 更柔和的曲线
+  const transition = 'transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)]'
+
+  const clearTimer = () => {
+    if (hoverTimer.current) window.clearTimeout(hoverTimer.current)
+    hoverTimer.current = null
+  }
+
+  const requestClose = () => {
+    clearTimer()
+    if (pinned) return
+    hoverTimer.current = window.setTimeout(() => setOpen(false), closeDelayMs)
+  }
+
+  const handleDoubleClickLike = () => {
+    // “正常双击速度”判定：时间阈值法，不使用计数
+    const now = Date.now()
+    const delta = now - lastClickAt.current
+    lastClickAt.current = now
+    if (delta > 0 && delta < 320) {
+      setPinned(!pinned)
+      if (!open) setOpen(true)
+      clearTimer()
+    }
+  }
 
   if (side === 'top') {
     const openH = openSize.height ?? 120
@@ -78,29 +116,29 @@ export default function HoverRevealDock({
           className="absolute left-[92px] right-0 top-0 z-40"
           style={{ height: hitThickness }}
           onMouseEnter={() => {
-            if (hoverTimer.current) window.clearTimeout(hoverTimer.current)
+            clearTimer()
             setOpen(true)
           }}
           onMouseLeave={() => {
-            if (hoverTimer.current) window.clearTimeout(hoverTimer.current)
-            hoverTimer.current = window.setTimeout(() => setOpen(false), 120)
+            requestClose()
           }}
+          onPointerDown={() => handleDoubleClickLike()}
         />
 
         {/* 面板 */}
         <div
           className={`absolute left-[92px] right-0 top-0 z-35 ${transition} ${
             open ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'
-          }`}
+          } ${pinned ? 'shadow-[0_10px_30px_rgba(0,0,0,0.08)]' : ''}`}
           style={{ height: openH }}
           onMouseEnter={() => {
-            if (hoverTimer.current) window.clearTimeout(hoverTimer.current)
+            clearTimer()
             setOpen(true)
           }}
           onMouseLeave={() => {
-            if (hoverTimer.current) window.clearTimeout(hoverTimer.current)
-            hoverTimer.current = window.setTimeout(() => setOpen(false), 120)
+            requestClose()
           }}
+          onPointerDown={() => handleDoubleClickLike()}
         >
           <div className="h-full rounded-b-[8px] border border-[#e6d9d3] bg-[#fdf7f4] backdrop-blur-0">
             {/* subtle accent */}
@@ -129,28 +167,28 @@ export default function HoverRevealDock({
           className="absolute right-0 top-0 bottom-0 z-40"
           style={{ width: hitThickness }}
           onMouseEnter={() => {
-            if (hoverTimer.current) window.clearTimeout(hoverTimer.current)
+            clearTimer()
             setOpen(true)
           }}
           onMouseLeave={() => {
-            if (hoverTimer.current) window.clearTimeout(hoverTimer.current)
-            hoverTimer.current = window.setTimeout(() => setOpen(false), 120)
+            requestClose()
           }}
+          onPointerDown={() => handleDoubleClickLike()}
         />
 
         <div
           className={`absolute right-0 top-0 bottom-0 z-35 ${transition} ${
             open ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 pointer-events-none'
-          }`}
+          } ${pinned ? 'shadow-[-14px_0_30px_rgba(0,0,0,0.08)]' : ''}`}
           style={{ width: openW }}
           onMouseEnter={() => {
-            if (hoverTimer.current) window.clearTimeout(hoverTimer.current)
+            clearTimer()
             setOpen(true)
           }}
           onMouseLeave={() => {
-            if (hoverTimer.current) window.clearTimeout(hoverTimer.current)
-            hoverTimer.current = window.setTimeout(() => setOpen(false), 120)
+            requestClose()
           }}
+          onPointerDown={() => handleDoubleClickLike()}
         >
           <div className="h-full rounded-l-[8px] border border-[#e6d9d3] bg-[#fdf7f4]">
             <div
@@ -177,28 +215,28 @@ export default function HoverRevealDock({
         className="absolute left-[92px] right-0 bottom-0 z-40"
         style={{ height: hitThickness }}
         onMouseEnter={() => {
-          if (hoverTimer.current) window.clearTimeout(hoverTimer.current)
+          clearTimer()
           setOpen(true)
         }}
         onMouseLeave={() => {
-          if (hoverTimer.current) window.clearTimeout(hoverTimer.current)
-          hoverTimer.current = window.setTimeout(() => setOpen(false), 120)
+          requestClose()
         }}
+        onPointerDown={() => handleDoubleClickLike()}
       />
 
       <div
         className={`absolute left-[92px] right-0 bottom-0 z-35 ${transition} ${
           open ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0 pointer-events-none'
-        }`}
+        } ${pinned ? 'shadow-[0_-10px_30px_rgba(0,0,0,0.08)]' : ''}`}
         style={{ height: openH }}
         onMouseEnter={() => {
-          if (hoverTimer.current) window.clearTimeout(hoverTimer.current)
+          clearTimer()
           setOpen(true)
         }}
         onMouseLeave={() => {
-          if (hoverTimer.current) window.clearTimeout(hoverTimer.current)
-          hoverTimer.current = window.setTimeout(() => setOpen(false), 120)
+          requestClose()
         }}
+        onPointerDown={() => handleDoubleClickLike()}
       >
         <div className="h-full rounded-t-[8px] border border-[#e6d9d3] bg-[#fdf7f4]">
           <div

@@ -12,19 +12,19 @@ export default function WallpaperCarouselDock() {
   const { wallpapers, wallpaperIndex, setWallpaperIndex } = useDesktop()
   const listRef = useRef<HTMLDivElement | null>(null)
 
-  const previews = useMemo(() => wallpapers.slice(0, 9), [wallpapers])
+  const previews = useMemo(() => wallpapers, [wallpapers])
 
   const scrollBy = (dx: number) => {
     listRef.current?.scrollBy({ left: dx, behavior: 'smooth' })
   }
 
   return (
-    <div className="h-full p-3">
-      <div className="flex h-full w-full items-center rounded-lg border border-[#e6d9d3] bg-[#fdf7f4] p-3">
-        <div className="mx-auto flex h-full w-full max-w-5xl items-center gap-3">
+    <div className="h-full px-4 py-4">
+      <div className="flex h-full w-full items-center">
+        <div className="mx-auto flex h-full w-full max-w-6xl items-center gap-3">
         <button
           type="button"
-          className="h-9 w-9 rounded-lg border border-[#e6d9d3] bg-white/70 text-[#4a4a4a]/80 hover:bg-white"
+          className="h-10 w-10 rounded-2xl bg-[#f7f0ed] text-[#4a4a4a]/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_10px_22px_rgba(0,0,0,0.07)] hover:bg-[#fbf5f2]"
           onClick={() => scrollBy(-260)}
           aria-label="向左滚动"
         >
@@ -32,7 +32,7 @@ export default function WallpaperCarouselDock() {
         </button>
 
         <div ref={listRef} className="flex-1 overflow-hidden">
-          <div className="flex gap-3 overflow-x-auto pb-1">
+          <div className="flex gap-3 overflow-x-auto pb-2">
             {previews.map((w, idx) => {
               const active = idx === wallpaperIndex
               return (
@@ -40,16 +40,14 @@ export default function WallpaperCarouselDock() {
                   key={w.id}
                   type="button"
                   onClick={() => setWallpaperIndex(idx)}
-                  className="relative h-20 w-28 shrink-0 overflow-hidden rounded-lg border transition"
-                  style={{
-                    borderColor: active ? 'rgba(74,74,74,0.35)' : 'rgba(74,74,74,0.12)',
-                  }}
+                  className={[
+                    'relative h-24 w-36 shrink-0 overflow-hidden rounded-2xl transition',
+                    'shadow-[inset_0_1px_0_rgba(255,255,255,0.7),0_12px_28px_rgba(0,0,0,0.12)]',
+                    active ? 'ring-2 ring-[#4a4a4a]/25' : 'hover:translate-y-[-1px]',
+                  ].join(' ')}
                   aria-label={`切换壁纸：${w.name}`}
                 >
                   <img src={w.thumbUrl} alt={w.name} className="h-full w-full object-cover" />
-                  {active ? (
-                    <div className="absolute inset-0 border-2 border-[#4a4a4a]/30" />
-                  ) : null}
                 </button>
               )
             })}
@@ -58,7 +56,7 @@ export default function WallpaperCarouselDock() {
 
         <button
           type="button"
-          className="h-9 w-9 rounded-lg border border-[#e6d9d3] bg-white/70 text-[#4a4a4a]/80 hover:bg-white"
+          className="h-10 w-10 rounded-2xl bg-[#f7f0ed] text-[#4a4a4a]/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_10px_22px_rgba(0,0,0,0.07)] hover:bg-[#fbf5f2]"
           onClick={() => scrollBy(260)}
           aria-label="向右滚动"
         >

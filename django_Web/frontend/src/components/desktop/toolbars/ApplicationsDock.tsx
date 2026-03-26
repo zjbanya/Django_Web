@@ -82,8 +82,8 @@ function Icon({ name }: { name: AppItem['icon'] }) {
 
 /**
  * 左侧 Applications Dock：
- * - 2 行网格（每列最多两个图标），多余向下换列（auto-flow-col）
- * - 点击图标激活“博客窗口”或打开外部链接（占位）
+ * - 单列（每行一个应用）
+ * - 强调“立体感”：按钮内外色相近但分层明显
  *
  * 扩展方式：
  * - 只需要改 `items` 数组，添加/删除应用即可。
@@ -156,48 +156,37 @@ export default function ApplicationsDock() {
     },
   ]
 
-  // 每“竖列”最多两个图标；列组向下换行（避免竖栏太宽导致视觉不是按列排）
-  const maxIconsPerColumn = 2
-  const verticalColumns = Array.from(
-    { length: Math.ceil(items.length / maxIconsPerColumn) },
-    (_, colIdx) => items.slice(colIdx * maxIconsPerColumn, (colIdx + 1) * maxIconsPerColumn),
-  )
-
   return (
-    <div className="h-full p-3">
-      <div className="text-xs font-semibold text-[#4a4a4a]/80">Applications</div>
-
-      {/* 列组向下换行，保证每列最多两个图标 */}
-      <div className="mt-3 grid grid-cols-2 gap-x-1 gap-y-2">
-        {verticalColumns.map((colItems, groupIdx) => {
-          // groupIdx 顺序：col0..colN，CSS grid 会自动按“行”向下换组
-          const key = `${groupIdx}`
-          return (
-            <div key={key} className="flex flex-col gap-1">
-              {Array.from({ length: maxIconsPerColumn }).map((_, idxInCol) => {
-                const item = colItems[idxInCol]
-                if (!item) return <div key={`${key}-empty-${idxInCol}`} className="h-8 w-8" />
-
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={item.action}
-                    className="group flex h-8 w-8 items-center justify-center rounded-lg border border-[#e6d9d3] bg-[#fdf7f4] transition hover:scale-[1.05] hover:bg-white/60"
-                    title={item.label}
-                  >
-                    <span className="select-none transition group-hover:filter group-hover:saturate-110">
-                      <Icon name={item.icon} />
-                    </span>
-                  </button>
-                )
-              })}
-            </div>
-          )
-        })}
+    <div className="h-full px-3 py-4">
+      <div className="px-1 text-[11px] font-semibold tracking-wide text-[#4a4a4a]/70">
+        Applications
       </div>
 
-      {/* 整体宽度由 DesktopShell 左侧 aside 控制，这里不再额外套 card 以免挤压布局 */}
+      <div className="mt-3 flex flex-col gap-2">
+        {items.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            onClick={item.action}
+            className={[
+              'group flex w-full items-center gap-2 rounded-xl px-2 py-2',
+              // 立体感：外层微暗、内层微亮 + 内阴影
+              'bg-[#f7f0ed] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_6px_14px_rgba(0,0,0,0.06)]',
+              'transition duration-200 ease-out',
+              'hover:translate-y-[-1px] hover:bg-[#fbf5f2] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.95),0_10px_22px_rgba(0,0,0,0.08)]',
+              'active:translate-y-[0px] active:shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_4px_10px_rgba(0,0,0,0.05)]',
+            ].join(' ')}
+            title={item.label}
+          >
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#fdf7f4] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+              <Icon name={item.icon} />
+            </span>
+            <span className="min-w-0 flex-1 truncate text-xs font-semibold text-[#4a4a4a]/85">
+              {item.label}
+            </span>
+          </button>
+        ))}
+      </div>
     </div>
   )
 }

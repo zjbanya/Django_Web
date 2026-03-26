@@ -26,6 +26,14 @@ export type DesktopContextValue = {
   isBottomOpen: boolean
   setIsBottomOpen: (open: boolean) => void
 
+  // Dock pin：双击后固定展开（再次双击取消固定）
+  isTopPinned: boolean
+  setIsTopPinned: (pinned: boolean) => void
+  isRightPinned: boolean
+  setIsRightPinned: (pinned: boolean) => void
+  isBottomPinned: boolean
+  setIsBottomPinned: (pinned: boolean) => void
+
   // BlogWindow：由左侧 Dock 点击控制
   isBlogOpen: boolean
   setIsBlogOpen: (open: boolean) => void
@@ -33,7 +41,7 @@ export type DesktopContextValue = {
 
 const DesktopContext = createContext<DesktopContextValue | null>(null)
 
-const MAX_WALLPAPERS = 9
+const MAX_WALLPAPERS = 48
 
 async function loadWallpapers(): Promise<Wallpaper[]> {
   // 非 eager：避免把所有壁纸都打包进来
@@ -96,6 +104,9 @@ export function DesktopProvider({ children }: { children: React.ReactNode }) {
   const [isTopOpen, setIsTopOpen] = useState(false)
   const [isRightOpen, setIsRightOpen] = useState(false)
   const [isBottomOpen, setIsBottomOpen] = useState(false)
+  const [isTopPinned, setIsTopPinned] = useState(false)
+  const [isRightPinned, setIsRightPinned] = useState(false)
+  const [isBottomPinned, setIsBottomPinned] = useState(false)
 
   const value = useMemo<DesktopContextValue>(
     () => ({
@@ -110,6 +121,12 @@ export function DesktopProvider({ children }: { children: React.ReactNode }) {
       setIsRightOpen,
       isBottomOpen,
       setIsBottomOpen,
+      isTopPinned,
+      setIsTopPinned,
+      isRightPinned,
+      setIsRightPinned,
+      isBottomPinned,
+      setIsBottomPinned,
       isBlogOpen,
       setIsBlogOpen,
     }),
@@ -120,6 +137,9 @@ export function DesktopProvider({ children }: { children: React.ReactNode }) {
       isTopOpen,
       isRightOpen,
       isBottomOpen,
+      isTopPinned,
+      isRightPinned,
+      isBottomPinned,
       isBlogOpen,
     ]
   )

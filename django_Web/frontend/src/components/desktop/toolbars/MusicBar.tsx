@@ -9,10 +9,10 @@ export default function MusicBar() {
   return (
     <div className="h-full p-3">
       <div className="flex h-full items-center justify-center">
-        <div className="flex h-full w-full max-w-3xl flex-col justify-center rounded-lg border border-[#e6d9d3] bg-[#fdf7f4] px-5 py-3">
+        <div className="flex h-full w-full max-w-3xl flex-col justify-center rounded-2xl bg-[#fdf7f4] px-5 py-3">
           <div className="flex items-center gap-4">
             {/* 封面：圆形 + hover 动画 */}
-            <div className="relative h-14 w-14 overflow-hidden rounded-full border border-[#e6d9d3] bg-white flex items-center justify-center">
+            <div className="relative h-14 w-14 overflow-hidden rounded-full bg-[#f7f0ed] flex items-center justify-center shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_12px_26px_rgba(0,0,0,0.10)]">
               <div className="h-12 w-12 rounded-full bg-gradient-to-br from-indigo-500/60 via-purple-500/50 to-pink-500/50 transition-transform duration-300 hover:scale-[1.08]" />
             </div>
 
@@ -32,10 +32,10 @@ export default function MusicBar() {
 
             {/* 控制按钮：播放/暂停 + 后一首 */}
             <div className="flex items-center gap-2">
-              <button className="h-9 w-9 rounded-lg border border-[#e6d9d3] bg-white/70 text-[#4a4a4a]/80 hover:bg-white">
+              <button className="h-10 w-10 rounded-2xl bg-[#f7f0ed] text-[#4a4a4a]/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_10px_22px_rgba(0,0,0,0.07)] hover:bg-[#fbf5f2]">
                 ▶
               </button>
-              <button className="h-9 w-9 rounded-lg border border-[#e6d9d3] bg-white/70 text-[#4a4a4a]/80 hover:bg-white">
+              <button className="h-10 w-10 rounded-2xl bg-[#f7f0ed] text-[#4a4a4a]/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_10px_22px_rgba(0,0,0,0.07)] hover:bg-[#fbf5f2]">
                 ⏭
               </button>
             </div>
