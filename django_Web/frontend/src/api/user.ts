@@ -50,6 +50,16 @@ export async function login(params: LoginParams): Promise<LoginResponse> {
   return response.data
 }
 
+
+/**
+ *  还未使用的登出api
+ * 
+ */
+export async function apiLogout(refreshToken: string) {
+  await axios.post('/api/logout/', { refresh: refreshToken });
+}
+
+
 /**
  * Register.
  * POST /api/register/
@@ -61,12 +71,32 @@ export async function register(params: RegisterParams): Promise<RegisterResponse
 }
 
 /**
+ * 获取博客文章列表（占位：你需要后端真正实现后再对齐返回结构）
+ * 建议后端路径：GET /api/posts/
+ */
+export async function getPosts(): Promise<any> {
+  const response = await axios.get('/api/posts/')
+  return response.data?.data ?? response.data
+}
+
+/**
+ * 获取博客文章详情（占位）
+ * 建议后端路径：GET /api/posts/:slug/
+ */
+export async function getPostDetail(slug: string): Promise<any> {
+  const response = await axios.get(`/api/posts/${slug}/`)
+  return response.data?.data ?? response.data
+}
+
+/**
  * Unified API export.
  */
 const userApi = {
   getUserList,
   login,
   register,
+  getPosts,
+  getPostDetail,
 }
 
 export default userApi
