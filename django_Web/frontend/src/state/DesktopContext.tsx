@@ -15,14 +15,20 @@ export type DesktopContextValue = {
   wallpaperIndex: number
   setWallpaperIndex: (index: number) => void
 
-  openToolbars: Partial<Record<ToolbarKey, boolean>>
-  setOpenToolbar: (key: ToolbarKey, open: boolean) => void
-
   accentHue: number
   setAccentHue: (h: number) => void
 
-  activeApp: ActiveApp
-  setActiveApp: (app: ActiveApp) => void
+  // 仅中间壁纸区域：工具栏默认隐藏/悬停展开
+  isTopOpen: boolean
+  setIsTopOpen: (open: boolean) => void
+  isRightOpen: boolean
+  setIsRightOpen: (open: boolean) => void
+  isBottomOpen: boolean
+  setIsBottomOpen: (open: boolean) => void
+
+  // BlogWindow：由左侧 Dock 点击控制
+  isBlogOpen: boolean
+  setIsBlogOpen: (open: boolean) => void
 }
 
 const DesktopContext = createContext<DesktopContextValue | null>(null)
@@ -85,29 +91,37 @@ export function DesktopProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  const [openToolbars, setOpenToolbars] = useState<Partial<Record<ToolbarKey, boolean>>>(
-    {}
-  )
-  const setOpenToolbar = (key: ToolbarKey, open: boolean) => {
-    setOpenToolbars((prev) => ({ ...prev, [key]: open }))
-  }
-
   const [accentHue, setAccentHue] = useState(255) // 蓝紫系默认值
-  const [activeApp, setActiveApp] = useState<ActiveApp>('blog')
+  const [isBlogOpen, setIsBlogOpen] = useState(false)
+  const [isTopOpen, setIsTopOpen] = useState(false)
+  const [isRightOpen, setIsRightOpen] = useState(false)
+  const [isBottomOpen, setIsBottomOpen] = useState(false)
 
   const value = useMemo<DesktopContextValue>(
     () => ({
       wallpapers,
       wallpaperIndex,
       setWallpaperIndex,
-      openToolbars,
-      setOpenToolbar,
       accentHue,
       setAccentHue,
-      activeApp,
-      setActiveApp,
+      isTopOpen,
+      setIsTopOpen,
+      isRightOpen,
+      setIsRightOpen,
+      isBottomOpen,
+      setIsBottomOpen,
+      isBlogOpen,
+      setIsBlogOpen,
     }),
-    [wallpapers, wallpaperIndex, openToolbars, accentHue, activeApp]
+    [
+      wallpapers,
+      wallpaperIndex,
+      accentHue,
+      isTopOpen,
+      isRightOpen,
+      isBottomOpen,
+      isBlogOpen,
+    ]
   )
 
   return <DesktopContext.Provider value={value}>{children}</DesktopContext.Provider>

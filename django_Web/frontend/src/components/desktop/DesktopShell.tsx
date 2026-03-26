@@ -1,64 +1,53 @@
-import React from 'react'
-
 import { useDesktop } from '../../state/DesktopContext'
-import ToolEdge from './ToolEdge'
 import ApplicationsDock from './toolbars/ApplicationsDock'
 import MusicBar from './toolbars/MusicBar'
 import SystemSettingsDrawer from './toolbars/SystemSettingsDrawer'
 import WallpaperCarouselDock from './toolbars/WallpaperCarouselDock'
 import BlogWindow from './windows/BlogWindow'
-
-type Props = {
-  // 如果你未来要做路由/弹窗，只需要替换 children 渲染即可
-  renderWindow?: () => React.ReactNode
-}
+import HoverRevealDock from './HoverRevealDock'
 
 /**
- * 桌面壳（Desktop Shell）：
- * - 全屏壁纸层（中间完全干净，不覆盖）
- * - 四个工具栏 Dock（默认隐藏，仅露出边界，悬停滑出）
- * - 非居中的窗口层放博客入口（避免遮挡壁纸中间区域）
+ * 桌面壳（Desktop Shell）v4：
+ * - 固定尺寸桌面窗口：1200x800
+ * - 左侧 Applications Dock 永远完全显示
+ * - 顶部/右侧/底部 Dock 默认隐藏，仅露出 1px 边框；鼠标靠近边缘展开
+ * - 中间壁纸区域默认完全干净（仅 BlogWindow 会覆盖）
  */
-export default function DesktopShell({ renderWindow }: Props) {
-  const { wallpapers, wallpaperIndex, activeApp } = useDesktop()
+export default function DesktopShell() {
+  const { wallpapers, wallpaperIndex, isBlogOpen, setIsBlogOpen } = useDesktop()
   const active = wallpapers[wallpaperIndex]
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-black">
-      {/* 壁纸层：铺满；中间区域无 UI 叠加 */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: active ? `url(${active.url})` : undefined,
-        }}
-      />
+    <div className="fixed inset-0 bg-[#fdf7f4]" aria-label="Desktop shell">
+      <div className="relative h-full w-full overflow-hidden rounded-[8px] border border-[#e6d9d3] bg-[#fdf7f4]">
+        {/* 壁纸层：默认绝对全屏铺底，三栏默认隐藏不会遮挡中间 */}
+        <div
+          className="pointer-events-none absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: active ? `url(${active.url})` : undefined }}
+        />
 
-      {/* 工具栏层 */}
-      <ToolEdge toolKey="applications" side="left">
-        <ApplicationsDock />
-      </ToolEdge>
+        {/* 左侧栏：Applications 永远常驻（完全显示） */}
+        <aside className="absolute left-0 top-0 bottom-0 w-[92px] border-r border-[#e6d9d3] bg-[#fdf7f4]">
+          <ApplicationsDock />
+        </aside>
 
-      <ToolEdge toolKey="music" side="top">
-        <MusicBar />
-      </ToolEdge>
+        {/* 中间壁纸区域：保持干净，仅 BlogWindow 覆盖 */}
+        <main className="absolute inset-0">
+          <BlogWindow open={isBlogOpen} onClose={() => setIsBlogOpen(false)} />
+        </main>
 
-      <ToolEdge toolKey="system" side="right">
-        <SystemSettingsDrawer />
-      </ToolEdge>
+        {/* 顶部/右侧/底部 Dock：默认收起，仅露出边框，鼠标靠近边缘展开 */}
+        <HoverRevealDock side="top" toolbarKey="music" openSize={{ height: 120 }}>
+          <MusicBar />
+        </HoverRevealDock>
 
-      <ToolEdge toolKey="wallpapers" side="bottom">
-        <WallpaperCarouselDock />
-      </ToolEdge>
+        <HoverRevealDock side="right" toolbarKey="system" openSize={{ width: 320 }}>
+          <SystemSettingsDrawer />
+        </HoverRevealDock>
 
-      {/* 窗口层（角落展示，不覆盖中间壁纸） */}
-      <div className="absolute left-4 top-24 z-20 pointer-events-none">
-        <div className="pointer-events-auto">
-          {renderWindow
-            ? renderWindow()
-            : activeApp === 'blog'
-              ? <BlogWindow />
-              : null}
-        </div>
+        <HoverRevealDock side="bottom" toolbarKey="wallpapers" openSize={{ height: 160 }}>
+          <WallpaperCarouselDock />
+        </HoverRevealDock>
       </div>
     </div>
   )

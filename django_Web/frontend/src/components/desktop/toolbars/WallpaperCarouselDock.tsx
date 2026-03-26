@@ -19,11 +19,12 @@ export default function WallpaperCarouselDock() {
   }
 
   return (
-    <div className="h-full p-4">
-      <div className="mx-auto flex h-full w-full max-w-5xl items-center gap-3">
+    <div className="h-full p-3">
+      <div className="flex h-full w-full items-center rounded-lg border border-[#e6d9d3] bg-[#fdf7f4] p-3">
+        <div className="mx-auto flex h-full w-full max-w-5xl items-center gap-3">
         <button
           type="button"
-          className="h-9 w-9 rounded-xl border border-white/10 bg-white/5 text-white/70 hover:bg-white/10"
+          className="h-9 w-9 rounded-lg border border-[#e6d9d3] bg-white/70 text-[#4a4a4a]/80 hover:bg-white"
           onClick={() => scrollBy(-260)}
           aria-label="向左滚动"
         >
@@ -39,15 +40,15 @@ export default function WallpaperCarouselDock() {
                   key={w.id}
                   type="button"
                   onClick={() => setWallpaperIndex(idx)}
-                  className="relative h-20 w-28 shrink-0 overflow-hidden rounded-2xl border transition"
+                  className="relative h-20 w-28 shrink-0 overflow-hidden rounded-lg border transition"
                   style={{
-                    borderColor: active ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.12)',
+                    borderColor: active ? 'rgba(74,74,74,0.35)' : 'rgba(74,74,74,0.12)',
                   }}
                   aria-label={`切换壁纸：${w.name}`}
                 >
                   <img src={w.thumbUrl} alt={w.name} className="h-full w-full object-cover" />
                   {active ? (
-                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm border border-white/10" />
+                    <div className="absolute inset-0 border-2 border-[#4a4a4a]/30" />
                   ) : null}
                 </button>
               )
@@ -57,12 +58,13 @@ export default function WallpaperCarouselDock() {
 
         <button
           type="button"
-          className="h-9 w-9 rounded-xl border border-white/10 bg-white/5 text-white/70 hover:bg-white/10"
+          className="h-9 w-9 rounded-lg border border-[#e6d9d3] bg-white/70 text-[#4a4a4a]/80 hover:bg-white"
           onClick={() => scrollBy(260)}
           aria-label="向右滚动"
         >
           →
         </button>
+        </div>
       </div>
     </div>
   )

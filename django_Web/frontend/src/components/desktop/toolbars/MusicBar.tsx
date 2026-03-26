@@ -7,38 +7,52 @@
  */
 export default function MusicBar() {
   return (
-    <div className="h-full p-4">
+    <div className="h-full p-3">
       <div className="flex h-full items-center justify-center">
-        <div className="w-full max-w-3xl rounded-3xl border border-white/10 bg-black/40 backdrop-blur-md px-5 py-3">
+        <div className="flex h-full w-full max-w-3xl flex-col justify-center rounded-lg border border-[#e6d9d3] bg-[#fdf7f4] px-5 py-3">
           <div className="flex items-center gap-4">
-            {/* 封面：外方内圆 + hover 动画 */}
-            <div className="relative h-12 w-12 rounded-2xl border border-white/10 bg-white/5 flex items-center justify-center overflow-hidden">
-              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500/70 via-purple-500/60 to-pink-500/60 transition-transform duration-300 hover:scale-[1.08]" />
+            {/* 封面：圆形 + hover 动画 */}
+            <div className="relative h-14 w-14 overflow-hidden rounded-full border border-[#e6d9d3] bg-white flex items-center justify-center">
+              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-indigo-500/60 via-purple-500/50 to-pink-500/50 transition-transform duration-300 hover:scale-[1.08]" />
             </div>
 
-            {/* 歌曲信息 */}
+            {/* 歌曲信息：顶部滚动条（占位实现为 CSS marquee） */}
             <div className="min-w-0 flex-1">
-              <div className="text-sm font-semibold text-white/90 truncate">
-                Midnight Cursor
+              <div className="text-sm font-semibold text-[#4a4a4a] overflow-hidden whitespace-nowrap">
+                <span className="inline-block animate-[marquee_8s_linear_infinite]">
+                  Midnight Cursor
+                </span>
               </div>
-              <div className="text-xs text-white/60 truncate">
-                Synthwave Studio • 01:23
+              <div className="mt-0.5 text-xs text-[#4a4a4a]/60 overflow-hidden whitespace-nowrap">
+                <span className="inline-block animate-[marquee_10s_linear_infinite]">
+                  Synthwave Studio • 01:23
+                </span>
               </div>
             </div>
 
-            {/* 控制按钮：简化 */}
+            {/* 控制按钮：播放/暂停 + 后一首 */}
             <div className="flex items-center gap-2">
-              <button className="h-9 w-9 rounded-xl border border-white/10 bg-white/5 text-white/80 hover:bg-white/10">
+              <button className="h-9 w-9 rounded-lg border border-[#e6d9d3] bg-white/70 text-[#4a4a4a]/80 hover:bg-white">
                 ▶
               </button>
-              <button className="h-9 w-9 rounded-xl border border-white/10 bg-white/5 text-white/80 hover:bg-white/10">
+              <button className="h-9 w-9 rounded-lg border border-[#e6d9d3] bg-white/70 text-[#4a4a4a]/80 hover:bg-white">
                 ⏭
               </button>
             </div>
+          </div>
+
+          {/* 进度条（占位） */}
+          <div className="mt-3 flex items-center gap-3">
+            <div className="text-[11px] text-[#4a4a4a]/55">0:32</div>
+            <div className="h-2 flex-1 overflow-hidden rounded-full bg-[#e6d9d3]">
+              <div className="h-full w-[40%] rounded-full bg-[#4a4a4a]/50" />
+            </div>
+            <div className="text-[11px] text-[#4a4a4a]/55">1:23</div>
           </div>
         </div>
       </div>
     </div>
   )
 }
+
 
