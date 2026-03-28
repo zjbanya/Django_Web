@@ -22,3 +22,119 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+# =====================
+# Python
+# =====================
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django stuff
+db.sqlite3
+*.log
+*.pot
+*.py[co]
+local_settings.py
+
+# =====================
+# Node / React
+# =====================
+# Node modules
+node_modules/
+# Build output
+build/
+dist/
+# Dependency directories
+jspm_packages/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# dotenv environment variables
+.env
+.env.local
+.env.*.local
+
+# React / Next.js cache
+.next/
+out/
+.cache/
+
+# Editor directories
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# =====================
+# System Files
+# =====================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# =====================
+# Media Files
+# =====================
+# Images
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.bmp
+*.tiff
+*.svg
+
+# Audio
+*.mp3
+*.wav
+*.flac
+*.aac
+*.ogg
+*.m4a
+
+# Video
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+
+# Lyrics / text resources
+*.lrc
+*.txt
+*.srt
+
+# =====================
+# Misc / temp
+# =====================
+*.tmp
+*.swp
+*.bak
+*.backup
+*.old
+*.origdjango_Web/frontend/src/assets/Emoji/表情包/*.rar
+django_Web/frontend/src/assets/CloudMusic/*.flac
+/src/assets/wallpaper/
+/src/assets/CloudMoney/
+/src/assets/Emoji/

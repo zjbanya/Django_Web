@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import LoginLog
-from .models import User
+from .models import User, Post
 # login/admin.py
 from django.contrib.auth.admin import UserAdmin
 
@@ -20,3 +20,11 @@ class LoginLogAdmin(admin.ModelAdmin):
     list_display = ("user", "ip_address", "timestamp")
     search_fields = ("user__username", "ip_address")
     list_filter = ("timestamp",)
+
+
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ("title", "slug", "is_published", "created_at")
+    search_fields = ("title", "slug", "summary", "content")
+    list_filter = ("is_published", "created_at")
+    prepopulated_fields = {"slug": ("title",)}

@@ -1,6 +1,7 @@
 # serializers.py
 from rest_framework import serializers
 from django.contrib.auth import authenticate, get_user_model
+from .models import Post
 
 User = get_user_model()  # 确保是自定义 User
 
@@ -37,3 +38,20 @@ class RegisterSerializer(serializers.Serializer):
             email=validated_data["email"],
             password=validated_data["password"]
         )
+
+
+class PostListSerializer(serializers.ModelSerializer):
+    date = serializers.DateTimeField(source="created_at", read_only=True)
+
+    class Meta:
+        model = Post
+        fields = ("slug", "title", "summary", "date")
+
+
+class PostDetailSerializer(serializers.ModelSerializer):
+    date = serializers.DateTimeField(source="created_at", read_only=True)
+    contentMarkdown = serializers.CharField(source="content", read_only=True)
+
+    class Meta:
+        model = Post
+        fields = ("slug", "title", "summary", "contentMarkdown", "date")

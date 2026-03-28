@@ -3,9 +3,10 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import LoginLog
-from .serializers import LoginSerializer, RegisterSerializer
+from .models import LoginLog, Post
+from .serializers import LoginSerializer, RegisterSerializer, PostListSerializer, PostDetailSerializer
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -77,3 +78,20 @@ class ProtectedProfileView(APIView):
 
     def get(self, request):
         return Response({"username": request.user.username})
+
+
+class PostListView(ListAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = PostListSerializer
+
+    def get_queryset(self):
+        return Post.objects.filter(is_published=True)
+
+
+class PostDetailView(RetrieveAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = PostDetailSerializer
+    lookup_field = "slug"
+
+    def get_queryset(self):
+        return Post.objects.filter(is_published=True)
