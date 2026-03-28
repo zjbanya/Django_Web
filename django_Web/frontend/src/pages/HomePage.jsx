@@ -1,5 +1,6 @@
 import DesktopShell from '../components/desktop/DesktopShell'
 import { DesktopProvider } from '../state/DesktopContext'
+import { WindowStoreProvider } from '../windowing/windowStore'
 
 /**
  * 桌面系统风格博客首页：
@@ -10,7 +11,9 @@ import { DesktopProvider } from '../state/DesktopContext'
 function HomePage() {
   return (
     <DesktopProvider>
-      <DesktopShell />
+      <WindowStoreProvider>
+        <DesktopShell />
+      </WindowStoreProvider>
     </DesktopProvider>
   )
 }

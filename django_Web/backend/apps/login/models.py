@@ -24,6 +24,22 @@ class LoginLog(models.Model):
     def __str__(self):
         return f"{self.user.username} @ {self.ip_address} ({self.timestamp})"
 
+class Post(models.Model):
+    """Simple blog post model for desktop blog window."""
+
+    slug = models.SlugField(max_length=120, unique=True)
+    title = models.CharField(max_length=200)
+    summary = models.CharField(max_length=320, blank=True, default="")
+    content = models.TextField(blank=True, default="")
+    is_published = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.title
 
 
 

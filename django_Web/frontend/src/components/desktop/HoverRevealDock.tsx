@@ -14,6 +14,11 @@ type Props = {
   hitThickness?: number
   // 鼠标移出后延迟隐藏（ms）
   closeDelayMs?: number
+  // 关闭触发点：
+  // - 'edge'：热区/面板都可能触发（更接近旧行为）
+  // - 'panel'：只在面板区域离开时触发
+  // - 'content'：只在 children 内容区域离开时触发（用于壁纸面板更精确）
+  closeMode?: 'edge' | 'panel' | 'content'
   children: ReactNode
 }
 
@@ -31,6 +36,7 @@ export default function HoverRevealDock({
   openSize,
   hitThickness = 14,
   closeDelayMs = 2000,
+  closeMode = 'edge',
   children,
 }: Props) {
   const {
@@ -78,6 +84,10 @@ export default function HoverRevealDock({
   // 更自然的“呼吸感”：更长时长 + 更柔和的曲线
   const transition = 'transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)]'
 
+  const closeOnHitboxLeave = closeMode === 'edge'
+  const closeOnPanelLeave = closeMode === 'edge' || closeMode === 'panel'
+  const closeOnContentLeave = closeMode === 'edge' || closeMode === 'content'
+
   const clearTimer = () => {
     if (hoverTimer.current) window.clearTimeout(hoverTimer.current)
     hoverTimer.current = null
@@ -120,7 +130,7 @@ export default function HoverRevealDock({
             setOpen(true)
           }}
           onMouseLeave={() => {
-            requestClose()
+            if (closeOnHitboxLeave) requestClose()
           }}
           onPointerDown={() => handleDoubleClickLike()}
         />
@@ -136,7 +146,7 @@ export default function HoverRevealDock({
             setOpen(true)
           }}
           onMouseLeave={() => {
-            requestClose()
+            if (closeOnPanelLeave) requestClose()
           }}
           onPointerDown={() => handleDoubleClickLike()}
         >
@@ -146,7 +156,18 @@ export default function HoverRevealDock({
               className="pointer-events-none absolute inset-0 rounded-b-[8px]"
               style={{ background: `linear-gradient(180deg, ${theme.subtle}, transparent)` }}
             />
-            <div className="relative h-full">{children}</div>
+            <div
+              className={closeMode === 'content' ? 'relative' : 'relative h-full'}
+              onMouseEnter={() => {
+                clearTimer()
+                if (!open) setOpen(true)
+              }}
+              onMouseLeave={() => {
+                if (closeOnContentLeave) requestClose()
+              }}
+            >
+              {children}
+            </div>
           </div>
         </div>
       </>
@@ -171,7 +192,7 @@ export default function HoverRevealDock({
             setOpen(true)
           }}
           onMouseLeave={() => {
-            requestClose()
+            if (closeOnHitboxLeave) requestClose()
           }}
           onPointerDown={() => handleDoubleClickLike()}
         />
@@ -186,7 +207,7 @@ export default function HoverRevealDock({
             setOpen(true)
           }}
           onMouseLeave={() => {
-            requestClose()
+            if (closeOnPanelLeave) requestClose()
           }}
           onPointerDown={() => handleDoubleClickLike()}
         >
@@ -195,7 +216,18 @@ export default function HoverRevealDock({
               className="pointer-events-none absolute inset-0 rounded-l-[8px]"
               style={{ background: `linear-gradient(90deg, ${theme.subtle}, transparent)` }}
             />
-            <div className="relative h-full">{children}</div>
+            <div
+              className={closeMode === 'content' ? 'relative' : 'relative h-full'}
+              onMouseEnter={() => {
+                clearTimer()
+                if (!open) setOpen(true)
+              }}
+              onMouseLeave={() => {
+                if (closeOnContentLeave) requestClose()
+              }}
+            >
+              {children}
+            </div>
           </div>
         </div>
       </>
@@ -219,7 +251,7 @@ export default function HoverRevealDock({
           setOpen(true)
         }}
         onMouseLeave={() => {
-          requestClose()
+          if (closeOnHitboxLeave) requestClose()
         }}
         onPointerDown={() => handleDoubleClickLike()}
       />
@@ -234,7 +266,7 @@ export default function HoverRevealDock({
           setOpen(true)
         }}
         onMouseLeave={() => {
-          requestClose()
+          if (closeOnPanelLeave) requestClose()
         }}
         onPointerDown={() => handleDoubleClickLike()}
       >
@@ -243,7 +275,18 @@ export default function HoverRevealDock({
             className="pointer-events-none absolute inset-0 rounded-t-[8px]"
             style={{ background: `linear-gradient(0deg, ${theme.subtle}, transparent)` }}
           />
-          <div className="relative h-full">{children}</div>
+          <div
+            className={closeMode === 'content' ? 'relative' : 'relative h-full'}
+            onMouseEnter={() => {
+              clearTimer()
+              if (!open) setOpen(true)
+            }}
+            onMouseLeave={() => {
+              if (closeOnContentLeave) requestClose()
+            }}
+          >
+            {children}
+          </div>
         </div>
       </div>
     </>

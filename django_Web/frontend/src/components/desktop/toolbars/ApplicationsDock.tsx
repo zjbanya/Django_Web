@@ -1,9 +1,10 @@
 import { useDesktop } from '../../../state/DesktopContext'
+import { useWindowStore } from '../../../windowing/windowStore'
 
 type AppItem = {
   id: string
   label: string
-  icon: 'desktop' | 'blog' | 'settings' | 'music' | 'files' | 'terminal' | 'network' | 'power'
+  icon: 'desktop' | 'blog' | 'settings' | 'music'
   action: () => void
 }
 
@@ -42,39 +43,6 @@ function Icon({ name }: { name: AppItem['icon'] }) {
           <circle cx="19.5" cy="16.5" r="2.5" />
         </svg>
       )
-    case 'files':
-      return (
-        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M7 3h7l3 3v15H7V3Z" />
-          <path d="M14 3v4h4" />
-        </svg>
-      )
-    case 'terminal':
-      return (
-        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <rect x="3.5" y="4.5" width="17" height="15" rx="2" />
-          <path d="M7 9l3 3-3 3" />
-          <path d="M12 15h5" />
-        </svg>
-      )
-    case 'network':
-      return (
-        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <circle cx="7" cy="7" r="2.5" />
-          <circle cx="17" cy="7" r="2.5" />
-          <circle cx="12" cy="17" r="2.5" />
-          <path d="M9.2 8.4l2 6.2" />
-          <path d="M14.8 8.4L12.8 14.6" />
-          <path d="M9.2 8.4L7 7" />
-        </svg>
-      )
-    case 'power':
-      return (
-        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M12 2v10" />
-          <path d="M6.2 5.8a9 9 0 1 0 11.6 0" />
-        </svg>
-      )
     default:
       return null
   }
@@ -89,77 +57,44 @@ function Icon({ name }: { name: AppItem['icon'] }) {
  * - 只需要改 `items` 数组，添加/删除应用即可。
  */
 export default function ApplicationsDock() {
-  const { setIsBlogOpen } = useDesktop()
+  const { accentHue } = useDesktop()
+  const { openWindow } = useWindowStore()
+
+  const accentBg = `hsla(${accentHue} 80% 90% / 1)`
+  const accentShadow = `hsla(${accentHue} 70% 55% / 0.25)`
 
   const items: AppItem[] = [
     {
       id: 'desktop',
-      label: 'Desktop',
+      label: '',
       icon: 'desktop',
-      action: () => {
-        // 作为占位：后续可打开桌面/文件管理窗口
-      },
+      action: () => { },
     },
     {
       id: 'blog',
-      label: 'Blog',
+      label: '',
       icon: 'blog',
-      action: () => setIsBlogOpen(true),
+      action: () => openWindow('blog'),
     },
     {
       id: 'settings',
-      label: 'Settings',
+      label: '',
       icon: 'settings',
-      action: () => {
-        // 右侧抽屉（Theme/Wallpaper/...）目前为占位：靠边缘 hover 打开
-      },
+      action: () => openWindow('settings'),
     },
     {
       id: 'music',
-      label: 'Music',
+      label: '',
       icon: 'music',
-      action: () => {
-        // 作为占位：音乐栏通过顶部边缘 hover 展开
-      },
-    },
-    {
-      id: 'files',
-      label: 'Files',
-      icon: 'files',
-      action: () => {
-        // 占位：后续可打开文件窗口
-      },
-    },
-    {
-      id: 'terminal',
-      label: 'Terminal',
-      icon: 'terminal',
-      action: () => {
-        // 占位：后续可打开终端窗口
-      },
-    },
-    {
-      id: 'network',
-      label: 'Network',
-      icon: 'network',
-      action: () => {
-        // 占位：后续可打开网络窗口
-      },
-    },
-    {
-      id: 'power',
-      label: 'Power',
-      icon: 'power',
-      action: () => {
-        // 占位：后续可做关机/重启等交互
-      },
+      action: () => openWindow('music'),
     },
   ]
 
+  //  工具栏 root 层 
   return (
-    <div className="h-full px-3 py-4">
+    <div className="h-full px-3 py-4 ">
       <div className="px-1 text-[11px] font-semibold tracking-wide text-[#4a4a4a]/70">
-        Applications
+
       </div>
 
       <div className="mt-3 flex flex-col gap-2">
@@ -176,9 +111,15 @@ export default function ApplicationsDock() {
               'hover:translate-y-[-1px] hover:bg-[#fbf5f2] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.95),0_10px_22px_rgba(0,0,0,0.08)]',
               'active:translate-y-[0px] active:shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_4px_10px_rgba(0,0,0,0.05)]',
             ].join(' ')}
+            style={{
+              boxShadow: `inset 0 1px 0 rgba(255,255,255,0.92), 0 6px 14px rgba(0,0,0,0.06), 0 0 0 1px ${accentShadow}`,
+            }}
             title={item.label}
           >
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#fdf7f4] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+            <span
+              className="flex h-8 w-8 items-center justify-center rounded-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]"
+              style={{ background: `linear-gradient(180deg, ${accentBg}, #fdf7f4)` }}
+            >
               <Icon name={item.icon} />
             </span>
             <span className="min-w-0 flex-1 truncate text-xs font-semibold text-[#4a4a4a]/85">
